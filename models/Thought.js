@@ -10,12 +10,12 @@ const ReactionSchema = new Schema(
     },
     reactionBody: {
       type: String,
-      required: true
-    },
-    writtenBy: {
-      type: String,
       required: true,
-      trim: true
+      maxlength: 280
+    },
+    username: {
+      type: String,
+      required: true
     },
     createdAt: {
       type: Date,
@@ -36,7 +36,9 @@ const ThoughtSchema = new Schema(
       type: String,
       required: true,
       //min:
+      minlength: 1,
       //max:
+      maxlength: 280
     },
     createdAt: {
       type: Date,
@@ -60,7 +62,7 @@ const ThoughtSchema = new Schema(
 );
 
 ThoughtSchema.virtual('reactionCount').get(function() {
-  return this.replies.length;
+  return this.reactions.length;
 });
 
 const Thought = model('Thought', ThoughtSchema);
