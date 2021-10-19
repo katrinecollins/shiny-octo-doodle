@@ -1,43 +1,46 @@
-const { Schema, model } = require('mongoose');
-// const { User } = require('.');
 
-const UserSchema = new Schema(
-    {
-        username: {
-            type: String,
-            unique: true,
-            require: true,
-            trim: true
-        },
-        email: {
-            type: String,
-            require: true,
-            unique: true,
-            match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/]
-        },
-        thoughts: [
-            {
-                //Array of id values referencing thought model
-                type: Schema.Types.ObjectId,
-                ref: 'Thought'
-            }
-        ],
-        friends: [
-            {
-                //Array of id values refrencing the User model(self reference)
-                type: Schema.Types.ObjectId,
-                ref: 'User'
-            }
-        ]
 
-    }
-)
+const { Schema, model } = require("mongoose");
 
-UserSchema.virtual('friendCount').get(function() {
-    return this.friends.length;
-})
+const userSchema = new Schema(
+  {
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      match: [/.+@.+\..+/, "This must be an email address!"],
+    },
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Thought",
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+  },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+    id: false,
+  }
+);
 
-const User = model('User', UserSchema);
+userSchema.virtual("friendCount").get(function () {
+  return this.friends.length;
+});
+
+const User = model("User", userSchema);
 
 module.exports = User;
-
